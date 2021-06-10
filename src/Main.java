@@ -20,7 +20,7 @@ public class Main {
 		System.out.println();
 		board.print();
 		System.out.println("\n");
-		int last = -1; // last o paiktis ton aspron oste na einai epomenos o paiktis ton mavron
+		int last = -1; // so that black plays next
 		
 		while(!board.isTerminal()) {
 		
@@ -28,7 +28,7 @@ public class Main {
 				if (board.hasMoves(playcolor)) {
 					System.out.print("\nEnter your move ( Input format: x,y ): ");
 					String input = scan.next().trim();
-					int x = -4; // mia akiri arxikopoiisi
+					int x = -4;
 					int y = -2;
 					while (board.LegalMove(playcolor, x, y).equals("illegal")) {
 						if (x!=-4 && y!=-2) {
@@ -57,7 +57,7 @@ public class Main {
 			if (last==playcolor) {
 				if (board.hasMoves(-playcolor)) {
 					Move move = pc.MiniMax(board);
-					//System.out.println(move);
+					
 					board.MakeMove(-playcolor,move);
 					System.out.println("I played "+move+"\n");
 					board.print();

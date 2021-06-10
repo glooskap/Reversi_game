@@ -83,7 +83,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (line-1>0 && cells[line-1][col] == ocolor) { // pano
+		while (line-1>0 && cells[line-1][col] == ocolor) { // look north
 			line--;
 			in = true;
 		}
@@ -97,7 +97,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (col+1<7 && cells[line][col+1] ==ocolor) { // deksia
+		while (col+1<7 && cells[line][col+1] ==ocolor) { // look west
 			col++;
 			in = true;
 		}
@@ -111,7 +111,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (col-1>0 && cells[line][col-1] == ocolor) { // aristera
+		while (col-1>0 && cells[line][col-1] == ocolor) { // look east
 			col--;
 			in = true;
 		}
@@ -125,7 +125,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (line+1<7 && col+1<7 && cells[line+1][col+1] == ocolor) { // kato deksia
+		while (line+1<7 && col+1<7 && cells[line+1][col+1] == ocolor) { // look southwest
 			line++;
 			col++;
 			in = true;
@@ -140,7 +140,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (line+1<7 && col-1>0 && cells[line+1][col-1] == ocolor) { // kato aristera
+		while (line+1<7 && col-1>0 && cells[line+1][col-1] == ocolor) { // look southeast
 			line++;
 			col--;
 			in = true;
@@ -154,7 +154,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (line-1>0 && col+1<7 && cells[line-1][col+1] == ocolor) { // pano deksia
+		while (line-1>0 && col+1<7 && cells[line-1][col+1] == ocolor) { // look northwest
 			line--;
 			col++;
 			in = true;
@@ -168,7 +168,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (line-1>0 && col-1>0 && cells[line-1][col-1] == ocolor) { // pano aristera
+		while (line-1>0 && col-1>0 && cells[line-1][col-1] == ocolor) { // look northeast
 			line--;
 			col--;
 			in = true;
