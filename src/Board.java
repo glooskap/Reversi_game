@@ -9,7 +9,7 @@ public class Board {
 	    
 	private Move lastMove;
 
-	private int lastLetterPlayed;
+	private int lastPlayer;
 	
 	private int MoveCounter;
 	
@@ -29,19 +29,18 @@ public class Board {
 		cells[4][4] = X;
 		
 		MoveCounter = 0;
-		lastLetterPlayed = O;
+		lastPlayer = O;
 	}
 
+	//copy constructor used by minimax to produce search children states
 	public Board(Board board) {
 		lastMove = board.lastMove;
-		lastLetterPlayed = board.lastLetterPlayed;
+		lastPlayer = board.lastPlayer;
 		MoveCounter = board.getMoveCounter();
 		cells = new int[8][8];
-		for(int i=0; i<8; i++) {
-			for(int j=0; j<8; j++) {
+		for(int i=0; i<8; i++)
+			for(int j=0; j<8; j++)
 				cells[i][j] = board.getCell(i,j);
-			}
-		}
 	}
 	
 	public int getCell(int x, int y) {
@@ -52,7 +51,7 @@ public class Board {
 	 * 
 	 * @param color: Player's color
 	 * @param x,y: move' coordinates
-	 * @return the directions that must be changed or illegal if the move cannot be made
+	 * @return the way the move affects the board or illegal if it cannot be made
 	 */
 	public String LegalMove(int color, int x, int y) {
 		
@@ -60,7 +59,7 @@ public class Board {
 		if (x<0 || y<0) return "illegal";
 		if (cells[x][y] != EMPTY) return "illegal";
 		
-		int ocolor = -color; //other color
+		int opponent = -color;
 		
 		String directions = "";
 		boolean in = false;
@@ -68,7 +67,7 @@ public class Board {
 		int line = x;
 		int col = y;
 		// check horizon
-		while (line+1<7 && cells[line+1][col] == ocolor) { // look south...
+		while (line+1<7 && cells[line+1][col] == opponent) { // look south...
 			line++;
 			in = true;
 		}
@@ -83,7 +82,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (line-1>0 && cells[line-1][col] == ocolor) { // look north
+		while (line-1>0 && cells[line-1][col] == opponent) { // look north
 			line--;
 			in = true;
 		}
@@ -97,7 +96,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (col+1<7 && cells[line][col+1] ==ocolor) { // look west
+		while (col+1<7 && cells[line][col+1] == opponent) { // look west
 			col++;
 			in = true;
 		}
@@ -111,7 +110,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (col-1>0 && cells[line][col-1] == ocolor) { // look east
+		while (col-1>0 && cells[line][col-1] == opponent) { // look east
 			col--;
 			in = true;
 		}
@@ -125,7 +124,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (line+1<7 && col+1<7 && cells[line+1][col+1] == ocolor) { // look southwest
+		while (line+1<7 && col+1<7 && cells[line+1][col+1] == opponent) { // look southwest
 			line++;
 			col++;
 			in = true;
@@ -140,7 +139,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (line+1<7 && col-1>0 && cells[line+1][col-1] == ocolor) { // look southeast
+		while (line+1<7 && col-1>0 && cells[line+1][col-1] == opponent) { // look southeast
 			line++;
 			col--;
 			in = true;
@@ -154,7 +153,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (line-1>0 && col+1<7 && cells[line-1][col+1] == ocolor) { // look northwest
+		while (line-1>0 && col+1<7 && cells[line-1][col+1] == opponent) { // look northwest
 			line--;
 			col++;
 			in = true;
@@ -168,7 +167,7 @@ public class Board {
 		in = false;
 		line = x;	//new direction
 		col = y;
-		while (line-1>0 && col-1>0 && cells[line-1][col-1] == ocolor) { // look northeast
+		while (line-1>0 && col-1>0 && cells[line-1][col-1] == opponent) { // look northeast
 			line--;
 			col--;
 			in = true;
@@ -192,8 +191,16 @@ public class Board {
 		int multimove = st.countTokens()>1 ? 2 : 0;
 		/*	if there are multiple moves make it 2, it decreases with each move
 		 *  2 signifies multiple moves. 0 a single move
-		 */ 
-		
+		 */
+
+		/* a multiple move affects the board in more than one direction
+		* eg.
+		*  O X O -		   O X O
+		*  O X X - becomes O O O
+		*  O X - -		   O O O
+		*/
+
+
 	    while (st.hasMoreTokens()) {
 	    	String direction = st.nextToken();
 	    	
@@ -299,9 +306,8 @@ public class Board {
 	    }
 	    
 	    lastMove = new Move(x, y);
-	    lastLetterPlayed = player;
+	    lastPlayer = player;
 	    MoveCounter++;
-
 	}
 	
 	public void MakeMove(int player, Move move) {
@@ -310,20 +316,18 @@ public class Board {
 	
 	/**
 	 * 
-	 * @param player: who's playin
+	 * @param player: the player's color
 	 * @return a list of all feasible moves player can make
 	 * 
 	 */
 	public ArrayList<Move> FeasibleMoves(int player) {
 		
 		ArrayList<Move> moves = new ArrayList<Move>();
-		Move tmp;
 		
 		for (int i=0; i<=7; i++) {
 			for (int j=0; j<=7; j++) {
 				if (!LegalMove(player, i, j).equals("illegal")) {
-					tmp = new Move(i,j);
-					moves.add(tmp);
+					moves.add(new Move(i,j));
 				}
 			}
 		}
@@ -334,16 +338,16 @@ public class Board {
 	/**
 	 * 
 	 * @param color: the player's color
-	 * @return the number of disks that are next to empty cells
+	 * @return the number of player's disks that are next to empty cells
 	 */
 	public int getPlayerFrontier(int color) {
 
 		int ans = 0;
 		for (int i=0; i<8; i++) {
 			for (int j=0; j<8; j++) {
-				if (cells[i][j] == color) {
-					if ((i == 7 && j == 7) || (i == 7 && j == 0) || (i == 0 && j == 0) || (i == 0 && j == 7))
-						continue; //corners cannot be changed
+				if (cells[i][j] == color ) {
+					if ((i == 7 && j == 7) || (i == 7 && j == 0) || (i == 0 && j == 0) || (i == 0 && j == 7)) ; //corners cannot be changed
+					// <wall cases
 					else if (i == 7) {
 						if (cells[i-1][j] == EMPTY || cells[i][j-1] == EMPTY || cells[i][j+1] == EMPTY || cells[i-1][j-1] == EMPTY || cells[i-1][j+1] == EMPTY)
 							ans++;
@@ -360,6 +364,7 @@ public class Board {
 						if (cells[i-1][j] == EMPTY || cells[i+1][j] == EMPTY || cells[i][j+1] == EMPTY || cells[i+1][j+1] == EMPTY || cells[i-1][j+1] == EMPTY)
 							ans++;
 					}
+					// /wall cases>
 					else {
 						if (cells[i-1][j] == EMPTY || cells[i+1][j] == EMPTY || cells[i][j-1] == EMPTY || cells[i][j+1] == EMPTY || cells[i+1][j+1] == EMPTY || cells[i+1][j-1] == EMPTY || cells[i-1][j-1] == EMPTY || cells[i-1][j+1] == EMPTY)
 							ans++;
@@ -373,12 +378,15 @@ public class Board {
 	}
 	
 	public double evaluate() {
-		Evaluation val = new Evaluation(this);
-		return val.heuristic_evaluation();
+		return new Evaluation(this).heuristic_evaluation();
 	}
 
-	/* Generates the children of the state
+	/**
+	 * Generates the children of the state
 	 * Every feasible move results to a child
+	 *
+	 * @param color: the player's color
+	 * @return every feasible move player can make
 	 */
 	public ArrayList<Board> getChildren(int color) {
 		ArrayList<Board> children = new ArrayList<Board>();
@@ -390,7 +398,7 @@ public class Board {
 			children.add(child);
 		}
 		return children;
-	}	
+	}
 	
 	public int countDisks(int player) {
 		int sum = 0;
@@ -401,18 +409,19 @@ public class Board {
 		return sum;
 	}	
 	
-	public String getWinner() {
-		
-		int Sum = 0;
-		for (int i=0; i<8; i++)
-			for (int j=0; j<8; j++)
-				Sum += cells[i][j];
-		
-		if (Sum > 0)
-			return "Black player won";
-		if (Sum < 0)
-			return "White player won";
-		return "It's a draw";
+	public void getWinner() {
+
+		int white = countDisks(O);
+		int black = countDisks(X);
+
+		if (black > white)
+			System.out.print("Black player won: ");
+		if (black < white)
+			System.out.print("White player won: ");
+		else
+			System.out.print("It's a draw: ");
+
+		System.out.println(white + " - " + black);
 	}
 
 	public boolean hasMoves(int player) {
@@ -420,9 +429,8 @@ public class Board {
 	}
 	
 	public boolean isTerminal() {
-		return (FeasibleMoves(X).size() + FeasibleMoves(O).size() == 0);
+		return !(hasMoves(X) || hasMoves(O));
 	}
-
 
 	public Move getLastMove() {
 		return lastMove;
@@ -432,15 +440,14 @@ public class Board {
 		return MoveCounter;
 	}
 	
-	public int getLastLetterPlayer() {
-		return lastLetterPlayed;
+	public int getLastPlayer() {
+		return lastPlayer;
 	}
 	
 	public void print() {
-		//System.out.println("* * * * * * * * * *");
+
 		System.out.println("* 0 1 2 3 4 5 6 7 *");
 		for (int i=0; i<8; i++) {
-			//System.out.print("*");
 			System.out.print(i);
 			for (int j=0; j<8; j++) {
 				if (cells[i][j] > 0)

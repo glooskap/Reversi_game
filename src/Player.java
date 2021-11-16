@@ -26,7 +26,7 @@ public class Player {
         }
     }
 
-    // The max and min functions are called interchangingly, one after another until a max depth is reached
+    // The max and min functions are called alternately, one after another until max depth is reached
     public Move max(Board board, int depth) {
 
         Random r = new Random();
@@ -35,8 +35,7 @@ public class Player {
          * then a heuristic is calculated on the state and the move returned.
          */
         if((board.isTerminal()) || (depth == maxDepth)) {
-            Move lastMove = new Move(board.getLastMove().getRow(), board.getLastMove().getCol(), board.evaluate());
-            return lastMove;
+            return new Move(board.getLastMove().getRow(), board.getLastMove().getCol(), board.evaluate());
         }
         //The children-moves of the state are calculated
         ArrayList<Board> children = new ArrayList<Board>(board.getChildren(Board.X));
@@ -70,8 +69,7 @@ public class Player {
         Random r = new Random();
 
         if((board.isTerminal()) || (depth == maxDepth)) {
-            Move lastMove = new Move(board.getLastMove().getRow(), board.getLastMove().getCol(), board.evaluate());
-            return lastMove;
+            return new Move(board.getLastMove().getRow(), board.getLastMove().getCol(), board.evaluate());
         }
         
         ArrayList<Board> children = new ArrayList<Board>(board.getChildren(Board.O));
@@ -95,11 +93,27 @@ public class Player {
         }
         return minMove;
     }
-    
-    public void setDepth(int depth) {
-    	if (depth>4) maxDepth=4;
-    	else if (depth<1) maxDepth=1;
-    	else maxDepth = depth;
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public void setDepth(String depth) {
+        if (depth.equalsIgnoreCase("normal"))
+            maxDepth = 2;
+        else if (depth.equalsIgnoreCase("hard"))
+            maxDepth = 3;
+        else if (depth.equalsIgnoreCase("expert"))
+            maxDepth = 4;
+        else
+    	    maxDepth = 1;
+    }
+
+    public String getDepth() {
+        if (maxDepth == 1) return "EASY";
+        if (maxDepth == 2) return "NORMAL";
+        if (maxDepth == 3) return "HARD";
+        return "EXPERT";
     }
 
 }

@@ -9,18 +9,13 @@ public class Evaluation {
 		this.board = board;
 		
 		weight = new double[7];
-		weight[0] = 1;
-		weight[1] = 500;
-		weight[2] = 100;
-		weight[3] = 80;
-		weight[4] = 30;
-		weight[5] = 20;
-		weight[6] = 20;
-		
-		if (board.getMoveCounter() > 7) {
-			weight[3] = 50;
-			weight[4] = 30;
-		}
+		weight[0] = 1;		// number of disks has very little impact before the end of the game
+		weight[1] = 500;	// corners are the most important cells
+		weight[2] = -100;	// so their neighbouring cells should be avoided
+		weight[3] = 80;		// wall cells are pretty important
+		weight[4] = -30;	// so their non-wall neighbouring cells should be avoided
+		weight[5] = 20;		// it is important to have options
+		weight[6] = -20;	// expanding the frontier usually offers good moves to the opponent
 
 	}
 	
@@ -47,11 +42,12 @@ public class Evaluation {
 		int black = board.countDisks(1);
 		int white = board.countDisks(-1);
 		if(black > white)
-			p = (black)/(black + white);
+			p = (black)/(double)(black + white);
 		else if(black < white)
-			p = -(white)/(black + white);
-		else p = 0;
+			p = -(white)/(double)(black + white);
 
+		// if the game is almost over
+		if (black + white > 60) weight[0] = 400;
 
 		// Corner occupancy
 		black = white = 0;
@@ -63,7 +59,10 @@ public class Evaluation {
 		else if(board.getCell(7,0) == -1) white++;
 		if(board.getCell(7,7) == 1) black++;
 		else if(board.getCell(7,7) == -1) white++;
-		c = black - white;
+		if(black > white)
+			c = (black)/(double)(black + white);
+		else if(black < white)
+			c = -(white)/(double)(black + white);
 		
 		// Wall occupancy
 		black = white = 0;
@@ -77,7 +76,10 @@ public class Evaluation {
 			if(board.getCell(7,i) == 1) black++;
 			else if(board.getCell(7,i) == -1) white++;
 		}
-		w = black - white;
+		if(black > white)
+			w = (black)/(double)(black + white);
+		else if(black < white)
+			w = -(white)/(double)(black + white);
 		
 		// Corner and wall closeness
 		black = white = 0;
@@ -198,28 +200,32 @@ public class Evaluation {
 				white_co++;
 			}
 		}
-		cl = black_co - white_co;
-		wl = black - white;
-		
+
+		if (black_co > white_co)
+			cl = black/(double)black_co + white_co;
+		if (white_co > black_co)
+			cl = white_co/(double)black_co + white_co;
+		if (black > white)
+			wl = black/(double)black + white;
+		if (white_co > black_co)
+			wl = white/(double)black + white;
 
 
 		// Mobility
 		black = board.FeasibleMoves(1).size();
 		white = board.FeasibleMoves(-1).size();
 		if(black > white)
-			m = (100.0 * black)/(black + white);
+			m = (black) / (double)(black + white);
 		else if(black < white)
-			m = -(100.0 * white)/(black + white);
-		else m = 0;
+			m = -(white) / (double)(black + white);
 
 		// Disk frontier
 		black = board.getPlayerFrontier(1);
 		white = board.getPlayerFrontier(-1);
 		if(black > white)
-			f = -(black)/(black + white);
+			f = -(black)/(double)(black + white);
 		else if(black < white)
-			f = (white)/(black + white);
-		else f = 0;
+			f = (white)/(double)(black + white);
 
 
 		return (weight[0] * p) + (weight[1] * c) + (weight[2] * cl) + (weight[3] * w) + (weight[4] * wl) + (weight[5] * m) + (weight[6] * f);

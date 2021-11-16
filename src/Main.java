@@ -5,21 +5,22 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		System.out.println("\nLet's play Reversi\n\n");
+		System.out.println("\n\tLET'S PLAY REVERSI\n\n");
 		Scanner scan = new Scanner(System.in);
 
-		System.out.print("How deep would you like the algorithm to search?(1-4): ");
-		int level = 1, playingColor = 1; //default values
+		System.out.println("Select difficulty level [EASY][NORMAL][HARD][EXPERT]");
+		System.out.print("--- type your choice: ");
+		int userColor = 1; //default value, is asked later
+		Player pc = new Player();
 
 		try {
-			String tmp = scan.next().trim();
-			if (tmp.equals("1") || tmp.equals("2") || tmp.equals("3") || tmp.equals("4"))
-				level = Integer.parseInt(tmp);
-			System.out.println("-Search depth level has been set to " + level);
+			pc.setDepth(scan.next().trim());
+
+			System.out.println("-- difficulty has been set to " + pc.getDepth());
 
 			System.out.print("Would you like to play first?(y/n): ");
 
-			if (scan.next().trim().equalsIgnoreCase("n")) playingColor = -1;
+			if (scan.next().trim().equalsIgnoreCase("n")) userColor = -1;
 
 		} catch (Exception e) {
 			System.err.println("Error processing user input!");
@@ -28,17 +29,16 @@ public class Main {
 		}
 		
 		Board board = new Board();
-		Player pc = new Player(-playingColor);
-		pc.setDepth(level);
+		pc.setColor(-userColor);
 		System.out.println();
 		board.print();
-		System.out.println("\n");
-		int last = -1; // so that black plays next
+		System.out.println();
+		int last = -1; // so that white plays first
 		
 		while (!board.isTerminal()) {
 		
-			if (last == -playingColor) {
-				if (board.hasMoves(playingColor)) {
+			if (last == -userColor) {
+				if (board.hasMoves(userColor)) {
 
 					int x = -4, y = -2; // random illegal move to enter while loop
 
@@ -46,7 +46,7 @@ public class Main {
 						System.out.print("\nEnter your move ( Input format: x,y ): ");
 						String input = scan.next().trim();
 
-						while (board.LegalMove(playingColor, x, y).equals("illegal")) {
+						while (board.LegalMove(userColor, x, y).equals("illegal")) {
 							if (x != -4 && y != -2) {
 								System.out.println("You entered an invalid move!\nEnter another move: ");
 								input = scan.next().trim();
@@ -65,31 +65,32 @@ public class Main {
 						return;
 					}
 					
-					board.MakeMove(playingColor, x, y);
+					board.MakeMove(userColor, x, y);
 					System.out.println();
 					board.print();
-					System.out.println("\n");
-					last = board.getLastLetterPlayer();
+					System.out.println();
+					last = board.getLastPlayer();
 				} else
 					last = -last;
 			}
 	
 
-			if (last==playingColor) {
-				if (board.hasMoves(-playingColor)) {
+			if (last == userColor) {
+				if (board.hasMoves(-userColor)) {
 					Move move = pc.MiniMax(board);
 					
-					board.MakeMove(-playingColor,move);
+					board.MakeMove(-userColor,move);
 					System.out.println("I played "+move+"\n");
 					board.print();
-					last = board.getLastLetterPlayer();
+					last = board.getLastPlayer();
 				} else
 					last = -last;
 			}
 		}
 		scan.close();
 		
-		System.out.println("\nGame ended! " + board.getWinner());
+		System.out.println("\n\t- GAME ENDED -");
+		board.getWinner();
 		
 	}
 
