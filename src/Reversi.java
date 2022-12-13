@@ -8,10 +8,11 @@ public class Reversi {
     private final Player playerAI;
     private final Board board;
     private boolean state;
+
     public Reversi() {
         state = true;
         scan = new Scanner(System.in);
-        userColor = 1; //default value
+        userColor = 1;
         playerAI = new Player();
         board = new Board();
     }
@@ -65,9 +66,9 @@ public class Reversi {
 
                 try {
                     while (move==null || move.equals("illegal")) {
-                        if (move!=null) {
+                        if (move!=null)
                             System.out.println(" Invalid move!");
-                        }
+
                         System.out.print("\nEnter your move ( Input format: x,y ): ");
                         input = scan.nextLine().trim();
 
@@ -95,13 +96,17 @@ public class Reversi {
 
                 Move myMove = playerAI.MiniMax(board);
                 board.makeMove(-userColor, myMove);
-                System.out.println("I played "+myMove);
+                System.out.println("I played " + myMove);
                 board.print();
                 last = board.getLastPlayer();
             }
         }
     }
 
+    /**
+     * GAME OVER... <br><br>
+     * finalize process and display the result if there were no errors
+     */
     public void over() {
         scan.close();
         if (state) board.getWinner();
