@@ -1,5 +1,5 @@
-/* A class describing a move in the board
- * Every produced child corresponds to a move
+/** A class describing a move on the board. <br>
+ * Every produced child corresponds to a move,
  * and we need to keep the moves as well as the states.
  */
 public class Move {

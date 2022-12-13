@@ -1,32 +1,27 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Intelligent player. Decides on minimax heuristic evaluation. <br>
+ * Game difficulty level corresponds depth level of evaluation.
+ */
 public class Player {
 
     private int color;
     private int maxDepth;
 
-    public Player() {
-    	this(-1);
-    }
-	
-	public Player(int color) {
-    	this.color = color;
-    	maxDepth = 2;
-    }
-
     public Move MiniMax(Board board) {
-        // black player wants to maximize the heuristics value
+        // blacks player wants to maximize the heuristics value
         if (color == Board.X) {
             return max(new Board(board), 0);
         }
-        // white player wants to minimize the heuristics value
+        // whites player wants to minimize the heuristics value
         else {
             return min(new Board(board), 0);
         }
     }
 
-    // The max and min functions are called alternately, one after another until max depth is reached
+    // max and min functions are called alternately, one after the other until max depth is reached
     public Move max(Board board, int depth) {
 
         Random r = new Random();
@@ -46,7 +41,7 @@ public class Player {
             //The child-move with the greatest value is selected and returned by max
             if(move.getValue() >= maxMove.getValue()) {
                 if ((move.getValue() == maxMove.getValue())) {
-                    //If the heuristic has the save value then we randomly choose one of the two moves
+                    //If they have the same value then we randomly choose one
                     if (r.nextInt(2) == 0) {
                         maxMove.setRow(child.getLastMove().getRow());
                         maxMove.setCol(child.getLastMove().getCol());

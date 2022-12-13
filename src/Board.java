@@ -6,6 +6,12 @@ public class Board {
 	public static final int X = 1;  // black
 	public static final int O = -1; // white
 	public static final int EMPTY = 0;
+
+	public static final String ILLEGAL = "illegal";
+	public static final String NORTH = "NORTH";
+	public static final String WEST = "WEST";
+	public static final String EAST = "EAST";
+	public static final String SOUTH = "SOUTH";
 	    
 	private Move lastMove;
 
@@ -21,7 +27,6 @@ public class Board {
 		for( int i=0; i<=7; i++)
 			for (int j=0; j<=7; j++)
 				cells[i][j] = EMPTY;
-		
 
 		cells[3][3] = X;
 		cells[3][4] = O;
@@ -53,139 +58,137 @@ public class Board {
 	 * @param x,y: move' coordinates
 	 * @return the way the move affects the board or illegal if it cannot be made
 	 */
-	public String LegalMove(int color, int x, int y) {
+	public String legalMove(int color, int x, int y) {
 		
-		if (x>7 || y>7) return "illegal";
-		if (x<0 || y<0) return "illegal";
-		if (cells[x][y] != EMPTY) return "illegal";
-		
+		if (x>7 || y>7) return ILLEGAL;
+		if (x<0 || y<0) return ILLEGAL;
+		if (cells[x][y] != EMPTY) return ILLEGAL;
+
+		StringBuilder directions = new StringBuilder();
 		int opponent = -color;
-		
-		String directions = "";
 		boolean in = false;
-		
 		int line = x;
 		int col = y;
+
 		// check horizon
 		while (line+1<7 && cells[line+1][col] == opponent) { // look south...
 			line++;
 			in = true;
 		}
-		line++;
-		
-		if (line == 8) directions += "";
-		else if (cells[line][col] == color && in) {	// ...to play north
-			directions += " NORTH";  
-			
-		}
-		
+		if (++line<7)
+			if(cells[line][col] == color && in)	// ...to play north
+				directions.append(NORTH);
+
+		// new direction
+		line = x;
 		in = false;
-		line = x;	//new direction
-		col = y;
 		while (line-1>0 && cells[line-1][col] == opponent) { // look north
 			line--;
 			in = true;
 		}
-		line--;
-		
-		if (line == -1) directions += "";
-		else if (cells[line][col] == color && in) {
-			directions += " SOUTH";
-		}
-		
+		if (--line >=0)
+			if (cells[line][col] == color && in) {
+				directions.append(" ");
+				directions.append(SOUTH);
+			}
+
+		// new direction
 		in = false;
-		line = x;	//new direction
-		col = y;
+		line = x;
 		while (col+1<7 && cells[line][col+1] == opponent) { // look west
 			col++;
 			in = true;
 		}
-		col++;
-		
-		if (col == 8) directions += "";
-		else if (cells[line][col] == color && in) {
-			directions += " EAST";
-		}
-		
+		if (++col<8)
+			if (cells[line][col] == color && in) {
+				directions.append(" ");
+				directions.append(EAST);
+			}
+
+		// new direction
 		in = false;
-		line = x;	//new direction
 		col = y;
 		while (col-1>0 && cells[line][col-1] == opponent) { // look east
 			col--;
 			in = true;
 		}
-		col--;
-		
-		if (col == -1) directions += "";
-		else if (cells[line][col] == color && in) {
-			directions += " WEST";  
-		}
-		
+		if (--col>=0)
+			if (cells[line][col] == color && in) {
+				directions.append(" ");
+				directions.append(WEST);
+			}
+
+		// new direction
 		in = false;
-		line = x;	//new direction
 		col = y;
 		while (line+1<7 && col+1<7 && cells[line+1][col+1] == opponent) { // look southwest
 			line++;
 			col++;
 			in = true;
 		}
-		
-		
-		if (++col == 8 || ++line == 8) directions += "";
-		else if (cells[line][col] == color && in) {
-			directions += " NORTHEAST";
-		}
-		
+		if (++col < 8 && ++line < 8)
+			if (cells[line][col] == color && in) {
+				directions.append(" ");
+				directions.append(NORTH);
+				directions.append(EAST);
+			}
+
+		// new direction
 		in = false;
-		line = x;	//new direction
+		line = x;
 		col = y;
 		while (line+1<7 && col-1>0 && cells[line+1][col-1] == opponent) { // look southeast
 			line++;
 			col--;
 			in = true;
 		}
-		
-		if (--col == -1 || ++line == 8) directions += "";
-		else if (cells[line][col] == color && in) {
-			directions += " NORTHWEST";			
-		}
-		
+		if (--col >= 0 && ++line < 8)
+			if (cells[line][col] == color && in) {
+				directions.append(" ");
+				directions.append(NORTH);
+				directions.append(WEST);
+			}
+
+		// new direction
 		in = false;
-		line = x;	//new direction
+		line = x;
 		col = y;
 		while (line-1>0 && col+1<7 && cells[line-1][col+1] == opponent) { // look northwest
 			line--;
 			col++;
 			in = true;
 		}
-		
-		if (++col == 8 || --line == -1) directions += "";
-		else if (cells[line][col] == color && in) {
-			directions += " SOUTHEAST";  	
-		}
-		
+		if (++col < 8 && --line >= 0)
+			if (cells[line][col] == color && in) {
+				directions.append(" ");
+				directions.append(SOUTH);
+				directions.append(EAST);
+			}
+
+		// new direction
 		in = false;
-		line = x;	//new direction
+		line = x;
 		col = y;
 		while (line-1>0 && col-1>0 && cells[line-1][col-1] == opponent) { // look northeast
 			line--;
 			col--;
 			in = true;
 		}
-		
-		if (--col == -1 || --line == -1) directions += "";
-		else if (cells[line][col] == color && in) {
-			directions += " SOUTHWEST";		
+		if (--col >= 0 && --line >= 0)
+			if (cells[line][col] == color && in) {
+			directions.append(" ");
+			directions.append(SOUTH);
+			directions.append(WEST);
 		}
+
+		//this move does not affect anything
+		if (directions.length()==0) return ILLEGAL;
 		
-		if (directions.equals("")) directions = "illegal";
-		
-		return directions;
+		return String.valueOf(directions);
 	}
 	
-	public void MakeMove(int player, int x, int y) {
-		
-		String directions = LegalMove(player,x,y);
+	public void makeMove(int player, int x, int y, String directions) {
+
 		StringTokenizer st = new StringTokenizer(directions);
 		
 		int multimove = st.countTokens()>1 ? 2 : 0;
@@ -195,11 +198,10 @@ public class Board {
 
 		/* a multiple move affects the board in more than one direction
 		* eg.
-		*  O X O -		   O X O
-		*  O X X - becomes O O O
-		*  O X - -		   O O O
+		*  O X O -			O X O
+		*  O X X - becomes	O O O
+		*  O X - -			O O O
 		*/
-
 
 	    while (st.hasMoreTokens()) {
 	    	String direction = st.nextToken();
@@ -309,24 +311,31 @@ public class Board {
 	    lastPlayer = player;
 	    MoveCounter++;
 	}
-	
-	public void MakeMove(int player, Move move) {
-		MakeMove(player,move.getRow(),move.getCol());
+
+	public void makeMove(int player, int x, int y) {
+		makeMove(player, x, y, legalMove(player,x,y));
 	}
-	
+
+	public void makeMove(int player, Move move) {
+		if (move!=null)
+			makeMove(player, move.getRow(), move.getCol());
+		else
+			makeMove(player, -1, -1);
+	}
+
 	/**
 	 * 
 	 * @param player: the player's color
 	 * @return a list of all feasible moves player can make
 	 * 
 	 */
-	public ArrayList<Move> FeasibleMoves(int player) {
+	public ArrayList<Move> feasibleMoves(int player) {
 		
-		ArrayList<Move> moves = new ArrayList<Move>();
+		ArrayList<Move> moves = new ArrayList<>();
 		
 		for (int i=0; i<=7; i++) {
 			for (int j=0; j<=7; j++) {
-				if (!LegalMove(player, i, j).equals("illegal")) {
+				if (!legalMove(player, i, j).equals("illegal")) {
 					moves.add(new Move(i,j));
 				}
 			}
@@ -371,7 +380,6 @@ public class Board {
 					}
 				}
 			}
-			
 		}
 		
 		return ans;
@@ -390,10 +398,10 @@ public class Board {
 	 */
 	public ArrayList<Board> getChildren(int color) {
 		ArrayList<Board> children = new ArrayList<Board>();
-		ArrayList<Move> moves = this.FeasibleMoves(color); 
+		ArrayList<Move> moves = this.feasibleMoves(color);
 		for (Move move : moves) {
 			Board child = new Board(this);
-			child.MakeMove(color, move.getRow(), move.getCol());
+			child.makeMove(color, move.getRow(), move.getCol());
 			move.setValue(child.evaluate());
 			children.add(child);
 		}
@@ -414,22 +422,24 @@ public class Board {
 		int white = countDisks(O);
 		int black = countDisks(X);
 
-		if (black > white)
-			System.out.print("Black player won: ");
-		if (black < white)
-			System.out.print("White player won: ");
-		else
-			System.out.print("It's a draw: ");
-
-		System.out.println(white + " - " + black);
+		System.out.println("-<| " + black + " - " + white + " |>-");
+		if (black > white) {
+			System.out.println("Blacks player won");
+		}
+		else if (black < white) {
+			System.out.println("Whites player won");
+		}
+		else {
+			System.out.println("It's a draw");
+		}
 	}
 
 	public boolean hasMoves(int player) {
-		return FeasibleMoves(player).size() != 0;
+		return feasibleMoves(player).size() != 0;
 	}
 	
 	public boolean isTerminal() {
-		return !(hasMoves(X) || hasMoves(O));
+		return !(hasMoves(X) && hasMoves(O));
 	}
 
 	public Move getLastMove() {
@@ -446,7 +456,7 @@ public class Board {
 	
 	public void print() {
 
-		System.out.println("* 0 1 2 3 4 5 6 7 *");
+		System.out.println("\n* 0 1 2 3 4 5 6 7 y");
 		for (int i=0; i<8; i++) {
 			System.out.print(i);
 			for (int j=0; j<8; j++) {
@@ -459,7 +469,7 @@ public class Board {
 			}
 			System.out.println(" *");
 		}
-		System.out.println("* * * * * * * * * *");
+		System.out.println("x * * * * * * * * *\n");
 	}
 	
 
