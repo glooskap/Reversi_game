@@ -12,7 +12,7 @@ public class Player {
 
     public Move MiniMax(Board board) {
         // blacks player wants to maximize the heuristics value
-        if (color == Board.X) {
+        if (color == Board.BLACK) {
             return max(new Board(board), 0);
         }
         // whites player wants to minimize the heuristics value
@@ -33,7 +33,7 @@ public class Player {
             return new Move(board.getLastMove().getRow(), board.getLastMove().getCol(), board.evaluate());
         }
         //The children-moves of the state are calculated
-        ArrayList<Board> children = new ArrayList<Board>(board.getChildren(Board.X));
+        ArrayList<Board> children = new ArrayList<Board>(board.getChildren(Board.BLACK));
         Move maxMove = new Move(Integer.MIN_VALUE);
         for (Board child : children) {
             //And for each child min is called, on a lower depth
@@ -67,7 +67,7 @@ public class Player {
             return new Move(board.getLastMove().getRow(), board.getLastMove().getCol(), board.evaluate());
         }
         
-        ArrayList<Board> children = new ArrayList<Board>(board.getChildren(Board.O));
+        ArrayList<Board> children = new ArrayList<Board>(board.getChildren(Board.WHITE));
         Move minMove = new Move(Integer.MAX_VALUE);
         for (Board child : children) {
             Move move = max(child, depth + 1);

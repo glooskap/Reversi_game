@@ -39,10 +39,13 @@ public class Evaluation {
 		double wall_closeness = 0;
 		double mobility = 0;
 		double frontier = 0;
+
+		int blackColor = Board.BLACK;
+		int whiteColor = Board.WHITE;
 		
 		// Number of disks
-		int black = board.countDisks(1);
-		int white = board.countDisks(-1);
+		int black = board.countDisks(blackColor);
+		int white = board.countDisks(Board.WHITE);
 		if(black > white)
 			disk_percentage = (black)/(double)(black + white);
 		else if(black < white)
@@ -53,14 +56,14 @@ public class Evaluation {
 
 		// Corner occupancy
 		black = white = 0;
-		if(board.getCell(0,0) == 1) black++;
-		else if(board.getCell(0,0) == -1) white++;
-		if(board.getCell(0,7) == 1) black++;
-		else if(board.getCell(0,7) == -1) white++;
-		if(board.getCell(7,0) == 1) black++;
-		else if(board.getCell(7,0) == -1) white++;
-		if(board.getCell(7,7) == 1) black++;
-		else if(board.getCell(7,7) == -1) white++;
+		if(board.getCell(0,0) == blackColor) black++;
+		else if(board.getCell(0,0) == whiteColor) white++;
+		if(board.getCell(0,7) == blackColor) black++;
+		else if(board.getCell(0,7) == whiteColor) white++;
+		if(board.getCell(7,0) == blackColor) black++;
+		else if(board.getCell(7,0) == whiteColor) white++;
+		if(board.getCell(7,7) == blackColor) black++;
+		else if(board.getCell(7,7) == whiteColor) white++;
 		if(black > white)
 			corner_occupancy = (black)/(double)(black + white);
 		else if(black < white)
@@ -69,14 +72,14 @@ public class Evaluation {
 		// Wall occupancy
 		black = white = 0;
 		for (int i=1; i<7; i++) {
-			if(board.getCell(0,i) == 1) black++;
-			else if(board.getCell(0,i) == -1) white++;
-			if(board.getCell(i,0) == 1) black++;
-			else if(board.getCell(i,0) == -1) white++;
-			if(board.getCell(i,7) == 1) black++;
-			else if(board.getCell(i,7) == -1) white++;
-			if(board.getCell(7,i) == 1) black++;
-			else if(board.getCell(7,i) == -1) white++;
+			if(board.getCell(0,i) == blackColor) black++;
+			else if(board.getCell(0,i) == whiteColor) white++;
+			if(board.getCell(i,0) == blackColor) black++;
+			else if(board.getCell(i,0) == whiteColor) white++;
+			if(board.getCell(i,7) == blackColor) black++;
+			else if(board.getCell(i,7) == whiteColor) white++;
+			if(board.getCell(7,i) == blackColor) black++;
+			else if(board.getCell(7,i) == whiteColor) white++;
 		}
 		if(black > white)
 			wall_occupancy = (black)/(double)(black + white);
@@ -85,145 +88,144 @@ public class Evaluation {
 		
 		// Corner and wall closeness
 		black = white = 0;
-		int black_co, white_co;
-		black_co = white_co = 0;
+		int black_corners = 0, white_corners = 0;
 		for (int i=1; i<7; i++) {
-			if(board.getCell(0,i) == 1) black++;
-			else if(board.getCell(0,i) == -1) white++;
-			if(board.getCell(i,0) == 1) black++;
-			else if(board.getCell(i,0) == -1) white++;
-			if(board.getCell(i,7) == 1) black++;
-			else if(board.getCell(i,7) == -1) white++;
-			if(board.getCell(7,i) == 1) black++;
-			else if(board.getCell(7,i) == -1) white++;
+			if(board.getCell(0,i) == blackColor) black++;
+			else if(board.getCell(0,i) == whiteColor) white++;
+			if(board.getCell(i,0) == blackColor) black++;
+			else if(board.getCell(i,0) == whiteColor) white++;
+			if(board.getCell(i,7) == blackColor) black++;
+			else if(board.getCell(i,7) == whiteColor) white++;
+			if(board.getCell(7,i) == blackColor) black++;
+			else if(board.getCell(7,i) == whiteColor) white++;
 		}
 		
 		if(board.getCell(0,0) == 0)   {
-			if(board.getCell(0,1) == 1) {
+			if(board.getCell(0,1) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(0,7) == -1) {
+			else if(board.getCell(0,7) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
-			if(board.getCell(1,1) == 1) {
+			if(board.getCell(1,1) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(1,1) == -1) {
+			else if(board.getCell(1,1) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
-			if(board.getCell(1,0) == 1) {
+			if(board.getCell(1,0) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(1,0) == -1) {
+			else if(board.getCell(1,0) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
 		}
 		if(board.getCell(0,7) == 0)   {
-			if(board.getCell(0,6) == 1) {
+			if(board.getCell(0,6) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(0,6) == -1) {
+			else if(board.getCell(0,6) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
-			if(board.getCell(1,6) == 1) {
+			if(board.getCell(1,6) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(1,6) == -1) {
+			else if(board.getCell(1,6) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
-			if(board.getCell(1,7) == 1) {
+			if(board.getCell(1,7) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(1,7) == -1) {
+			else if(board.getCell(1,7) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
 		}
 		if(board.getCell(7, 0) == 0)   {
-			if(board.getCell(7,1) == 1) {
+			if(board.getCell(7,1) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(7,1) == -1) {
+			else if(board.getCell(7,1) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
-			if(board.getCell(6,1) == 1) {
+			if(board.getCell(6,1) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(6,1) == -1) {
+			else if(board.getCell(6,1) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
-			if(board.getCell(6,0) == 1) {
+			if(board.getCell(6,0) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(6,0) == -1) {
+			else if(board.getCell(6,0) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
 		}
 		if(board.getCell(7,7) == 0)   {
-			if(board.getCell(6,7) == 1) {
+			if(board.getCell(6,7) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(6,7) == -1) {
+			else if(board.getCell(6,7) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
-			if(board.getCell(6,6) == 1) {
+			if(board.getCell(6,6) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(6,6) == -1) {
+			else if(board.getCell(6,6) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
-			if(board.getCell(7,6) == 1) {
+			if(board.getCell(7,6) == blackColor) {
 				black--;
-				black_co++;
+				black_corners++;
 			}
-			else if(board.getCell(7,6) == -1) {
+			else if(board.getCell(7,6) == whiteColor) {
 				white--;
-				white_co++;
+				white_corners++;
 			}
 		}
 
-		if (black_co > white_co)
-			corner_closeness = black/(double)black_co + white_co;
-		if (white_co > black_co)
-			corner_closeness = white_co/(double)black_co + white_co;
+		if (black_corners > white_corners)
+			corner_closeness = black/(double)black_corners + white_corners;
+		if (white_corners > black_corners)
+			corner_closeness = white_corners/(double)black_corners + white_corners;
 		if (black > white)
 			wall_closeness = black/(double)black + white;
-		if (white_co > black_co)
+		if (white > black)
 			wall_closeness = white/(double)black + white;
 
 
 		// Mobility
-		black = board.feasibleMoves(1).size();
-		white = board.feasibleMoves(-1).size();
+		black = board.feasibleMoves(blackColor).size();
+		white = board.feasibleMoves(whiteColor).size();
 		if(black > white)
 			mobility = (black) / (double)(black + white);
 		else if(black < white)
 			mobility = -(white) / (double)(black + white);
 
 		// Disk frontier
-		black = board.getPlayerFrontier(1);
-		white = board.getPlayerFrontier(-1);
+		black = board.getPlayerFrontier(blackColor);
+		white = board.getPlayerFrontier(whiteColor);
 		if(black > white)
 			frontier = -(black)/(double)(black + white);
 		else if(black < white)

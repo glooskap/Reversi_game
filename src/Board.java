@@ -3,20 +3,17 @@ import java.util.StringTokenizer;
 
 public class Board {
 	
-	public static final int X = 1;  // black
-	public static final int O = -1; // white
+	public static final int BLACK = 1;
+	public static final int WHITE = -1;
 	public static final int EMPTY = 0;
-
-	public static final String ILLEGAL = "illegal";
-	public static final String NORTH = "NORTH";
-	public static final String WEST = "WEST";
-	public static final String EAST = "EAST";
-	public static final String SOUTH = "SOUTH";
+	private static final String ILLEGAL = "illegal";
+	private static final String NORTH = "NORTH";
+	private static final String WEST = "WEST";
+	private static final String EAST = "EAST";
+	private static final String SOUTH = "SOUTH";
 	    
 	private Move lastMove;
-
 	private int lastPlayer;
-	
 	private int MoveCounter;
 	
 	private int[][] cells;
@@ -28,13 +25,13 @@ public class Board {
 			for (int j=0; j<=7; j++)
 				cells[i][j] = EMPTY;
 
-		cells[3][3] = X;
-		cells[3][4] = O;
-		cells[4][3] = O;
-		cells[4][4] = X;
+		cells[3][3] = BLACK;
+		cells[3][4] = WHITE;
+		cells[4][3] = WHITE;
+		cells[4][4] = BLACK;
 		
 		MoveCounter = 0;
-		lastPlayer = O;
+		lastPlayer = WHITE;
 	}
 
 	//copy constructor used by minimax to produce search children states
@@ -335,7 +332,7 @@ public class Board {
 		
 		for (int i=0; i<=7; i++) {
 			for (int j=0; j<=7; j++) {
-				if (!legalMove(player, i, j).equals("illegal")) {
+				if (!legalMove(player, i, j).equals(ILLEGAL)) {
 					moves.add(new Move(i,j));
 				}
 			}
@@ -419,8 +416,8 @@ public class Board {
 	
 	public void getWinner() {
 
-		int white = countDisks(O);
-		int black = countDisks(X);
+		int white = countDisks(WHITE);
+		int black = countDisks(BLACK);
 
 		System.out.println("-<| " + black + " - " + white + " |>-");
 		if (black > white) {
@@ -439,7 +436,7 @@ public class Board {
 	}
 	
 	public boolean isTerminal() {
-		return !(hasMoves(X) && hasMoves(O));
+		return !(hasMoves(BLACK) && hasMoves(WHITE));
 	}
 
 	public Move getLastMove() {
