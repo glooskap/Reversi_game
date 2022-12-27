@@ -45,7 +45,7 @@ public class Evaluation {
 		
 		// Number of disks
 		int black = board.countDisks(blackColor);
-		int white = board.countDisks(Board.WHITE);
+		int white = board.countDisks(whiteColor);
 		if(black > white)
 			disk_percentage = (black)/(double)(black + white);
 		else if(black < white)
@@ -100,7 +100,7 @@ public class Evaluation {
 			else if(board.getCell(7,i) == whiteColor) white++;
 		}
 		
-		if(board.getCell(0,0) == 0)   {
+		if(board.getCell(0,0) == Board.EMPTY) {
 			if(board.getCell(0,1) == blackColor) {
 				black--;
 				black_corners++;
@@ -126,7 +126,7 @@ public class Evaluation {
 				white_corners++;
 			}
 		}
-		if(board.getCell(0,7) == 0)   {
+		if(board.getCell(0,7) == Board.EMPTY) {
 			if(board.getCell(0,6) == blackColor) {
 				black--;
 				black_corners++;
@@ -152,7 +152,7 @@ public class Evaluation {
 				white_corners++;
 			}
 		}
-		if(board.getCell(7, 0) == 0)   {
+		if(board.getCell(7, 0) == Board.EMPTY) {
 			if(board.getCell(7,1) == blackColor) {
 				black--;
 				black_corners++;
@@ -178,7 +178,7 @@ public class Evaluation {
 				white_corners++;
 			}
 		}
-		if(board.getCell(7,7) == 0)   {
+		if(board.getCell(7,7) == Board.EMPTY)   {
 			if(board.getCell(6,7) == blackColor) {
 				black--;
 				black_corners++;
