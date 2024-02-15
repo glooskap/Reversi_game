@@ -355,24 +355,25 @@ public class Board {
 					if ((i == 7 && j == 7) || (i == 7 && j == 0) || (i == 0 && j == 0) || (i == 0 && j == 7)) ; //corners cannot be changed
 					// <wall cases
 					else if (i == 7) {
-						if (cells[i-1][j] == EMPTY || cells[i][j-1] == EMPTY || cells[i][j+1] == EMPTY || cells[i-1][j-1] == EMPTY || cells[i-1][j+1] == EMPTY)
+						if (cells[i-1][j] + cells[i][j-1] + cells[i][j+1] + cells[i-1][j-1] + cells[i-1][j+1] == EMPTY)
 							ans++;
 					}
 					else if (i == 0) {
-						if (cells[i+1][j] == EMPTY || cells[i][j-1] == EMPTY || cells[i][j+1] == EMPTY || cells[i+1][j+1] == EMPTY || cells[i+1][j-1] == EMPTY)
+						if (cells[i+1][j] + cells[i][j-1] + cells[i][j+1] + cells[i+1][j+1] + cells[i+1][j-1] == EMPTY)
 							ans++;
 					}
 					else if (j == 7) {
-						if (cells[i-1][j] == EMPTY || cells[i+1][j] == EMPTY || cells[i][j-1] == EMPTY || cells[i-1][j-1] == EMPTY || cells[i+1][j-1] == EMPTY)
+						if (cells[i-1][j] + cells[i+1][j]+ cells[i][j-1] + cells[i-1][j-1] + cells[i+1][j-1] == EMPTY)
 							ans++;
 					}
 					else if (j == 0) {
-						if (cells[i-1][j] == EMPTY || cells[i+1][j] == EMPTY || cells[i][j+1] == EMPTY || cells[i+1][j+1] == EMPTY || cells[i-1][j+1] == EMPTY)
+						if (cells[i-1][j] + cells[i+1][j] + cells[i][j+1] + cells[i+1][j+1] + cells[i-1][j+1] == EMPTY)
 							ans++;
 					}
 					// /wall cases>
 					else {
-						if (cells[i-1][j] == EMPTY || cells[i+1][j] == EMPTY || cells[i][j-1] == EMPTY || cells[i][j+1] == EMPTY || cells[i+1][j+1] == EMPTY || cells[i+1][j-1] == EMPTY || cells[i-1][j-1] == EMPTY || cells[i-1][j+1] == EMPTY)
+						if (cells[i-1][j] + cells[i+1][j] + cells[i][j-1] + cells[i][j+1] + cells[i+1][j+1]
+								+ cells[i+1][j-1] + cells[i-1][j-1] + cells[i-1][j+1] == EMPTY)
 							ans++;
 					}
 				}

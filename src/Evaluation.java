@@ -232,7 +232,8 @@ public class Evaluation {
 			frontier = (white)/(double)(black + white);
 
 
-		return (weight[0] * disk_percentage) + (weight[1] * corner_occupancy) + (weight[2] * corner_closeness) + (weight[3] * wall_occupancy) + (weight[4] * wall_closeness) + (weight[5] * mobility) + (weight[6] * frontier);
+		return (weight[0] * disk_percentage) + (weight[1] * corner_occupancy) + (weight[2] * corner_closeness)
+				+ (weight[3] * wall_occupancy) + (weight[4] * wall_closeness) + (weight[5] * mobility) + (weight[6] * frontier);
 	}
 
 }

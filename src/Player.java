@@ -10,12 +10,17 @@ public class Player {
     private int color;
     private int maxDepth;
 
+    /**
+     * AI decides what is the best move to make according to minimax algorithm. Depth has been already set. <br>
+     * - blacks player wants to maximize the heuristics value <br>
+     * - whites player wants to minimize the heuristics value
+      * @param board the current state of the Board
+     * @return Move
+     */
     public Move MiniMax(Board board) {
-        // blacks player wants to maximize the heuristics value
         if (color == Board.BLACK) {
             return max(new Board(board), 0);
         }
-        // whites player wants to minimize the heuristics value
         else {
             return min(new Board(board), 0);
         }

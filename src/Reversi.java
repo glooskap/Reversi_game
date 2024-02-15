@@ -87,8 +87,6 @@ public class Reversi {
                 }
 
                 board.makeMove(userColor, x, y, move);
-                board.print();
-                last = board.getLastPlayer();
             }
 
             if (last == userColor) {
@@ -97,9 +95,10 @@ public class Reversi {
                 Move myMove = playerAI.MiniMax(board);
                 board.makeMove(-userColor, myMove);
                 System.out.println("I played " + myMove);
-                board.print();
-                last = board.getLastPlayer();
             }
+
+            board.print();
+            last = board.getLastPlayer();
         }
     }
 
